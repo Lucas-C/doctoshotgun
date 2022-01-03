@@ -34,7 +34,7 @@ from woob.tools.misc import get_backtrace
 SLEEP_INTERVAL_AFTER_CONNECTION_ERROR = 5
 SLEEP_INTERVAL_AFTER_LOGIN_ERROR = 10
 SLEEP_INTERVAL_AFTER_CENTER = 1
-SLEEP_INTERVAL_AFTER_RUN = 5
+SLEEP_INTERVAL_AFTER_RUN = 2
 
 try:
     from playsound import playsound as _playsound, PlaysoundException
@@ -863,7 +863,9 @@ class Application:
             while True:
                 log_ts()
                 try:
-                    for center in docto.find_centers(cities, motives):
+                    centers = list(docto.find_centers(cities, motives))
+                    print(f"Centers: {','.join(sorted(c['name_with_title'] for c in centers))}")
+                    for center in centers:
                         if not args.include_neighbor_city and not docto.normalize(center['city']).startswith(tuple(cities)):
                             logging.debug("Skipping city '%(city)s' %(name_with_title)s" % center)
                             continue
